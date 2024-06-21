@@ -1,12 +1,11 @@
 import axios from 'axios';
 
 
-const url = 'http://localhost:5000'
+const url = 'https://backend-capstone-gmail-clone-app.onrender.com'
 
 const headers = (token) => ({
     headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': token
         token : token,
     }
 });
@@ -19,7 +18,6 @@ export const login = (form) => axios.post(`${url}/auth/signin`, form);
 
 
 // email routes
-// export const getAllEmails = (token) => axios.get(`${url}/email`, headers(token))
 export const sendEmail = (form) => axios.post(`${url}/save`, form);
 export const getAllEmails = (token,type) => axios.get(`${url}/emails/${type}`, headers(token))
 
