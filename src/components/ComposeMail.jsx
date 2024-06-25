@@ -1,10 +1,8 @@
 import { Close, DeleteOutlineOutlined, Send, Token } from "@mui/icons-material";
 import { Box, Button, Dialog, IconButton, InputBase, TextField, Typography, styled } from "@mui/material";
 import React, { useEffect, useState } from "react";
-// import useApi from "../hooks/useApi";
-// import { API_URLS } from "../services/api.urls";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewEmail } from "../Redux/Reducers/EmailReducer";
+import { addNewEmail, saveDraftEmail } from "../Redux/Reducers/EmailReducer";
 
 
 const dialogStyle = {
@@ -54,13 +52,11 @@ const SendButton = styled(Button)({
 
 })
 
-export default function ComposeMail({ openDrawer, setOpenDrawer }) {
+export default function ComposeMail({ openDrawer, setOpenDrawer, setInputValue }) {
     const [data, setData] = useState({});
     const userdata = useSelector((state) => state.users.data.data);
-    const { token } = useSelector((state) => state.users.data);
+    // const { openDrawer } = useSelector((state) => state.emails.openDrawer)
 
-    // const sentEmailservice = useApi(API_URLS.saveSentEmail);
-    // const saveDraftService = useApi(API_URLS.saveDraftEmails);
 
     const dispatch = useDispatch();
 
@@ -69,11 +65,21 @@ export default function ComposeMail({ openDrawer, setOpenDrawer }) {
             ...data,
             [e.target.name]: e.target.value
         })
+        setInputValue({
+            ...data,
+            [e.target.name]: e.target.value
+        })
     }
 
-    
+
+    useEffect(() => {
+        if (openDrawer) {
+
+        }
+    }, [openDrawer])
+
+
     const sendingMail = async (e) => {
-        
         const form = {
             userId: userdata._id,
             from: userdata.email,
@@ -85,50 +91,30 @@ export default function ComposeMail({ openDrawer, setOpenDrawer }) {
             name: `${userdata.firstname}${userdata.middlename}${userdata.lastname}`,
             type: 'sent'
         }
-        
-        
-        dispatch(addNewEmail(form));
-        console.log(token,form);
-        setOpenDrawer(false);
-        setData({});
-        // dispatch(sendEmailAction(payload))
-        // console.log(payload);
-        
-        
-        // sentEmailservice.call(payload);
-        
-        // if (!sentEmailservice.error) {
-            //     setOpenDrawer(false);
-            //     setData({});
-            // } else {
-                
-            // }
-            
-        }
-        
-        // useEffect(() => {
-        //     console.log(token,form);
-        // },[])
 
+        dispatch(addNewEmail(form));
+
+        setOpenDrawer(false);
+
+        setData({});
+    }
 
 
     const closeComposeMail = async (e) => {
         e.preventDefault();
-        const payload = {
+        const form = {
+            userId: userdata._id,
+            from: userdata.email,
             to: data.to,
-            from: 'vinitharambe1016@gmail.com',
             subject: data.subject,
             body: data.body,
             date: new Date(),
             image: '',
-            name: 'Vinitha ram',
-            starred: false,
+            name: `${userdata.firstname}${userdata.middlename}${userdata.lastname}`,
             type: 'drafts'
         }
-        console.log(payload);
-        if (payload.to || payload.subject || payload.body) {
-            console.log('vinitha')
-            // saveDraftService.call(payload);
+        if (form.to && form.subject && form.body) {
+            dispatch(saveDraftEmail(form))
         }
         setOpenDrawer(false);
         setData({})

@@ -8,7 +8,7 @@ import { EMPTY_TABS } from "../constants/constant";
 // import { API_URLS } from "../services/api.urls";
 import Email from "./Email";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEmails } from "../Redux/Reducers/EmailReducer";
+import { deleteEmail, fetchEmails, movesEmailToBin } from "../Redux/Reducers/EmailReducer";
 import { getAllEmails } from "../api";
 
 
@@ -17,20 +17,18 @@ export default function Emails() {
     const [starredEmail, setStarredEmail] = useState(false);
     const [selectedEmails, setSelectedEmails] = useState([]);
     const { token } = useSelector((state) => state.users.data);
+    const [ emailSelected, setEmailSelected] = useState(null)
 
-   const { emails } = useSelector((state) => state.emails);
+    const { emails } = useSelector((state) => state.emails);
 
 
     const { openDrawer } = useOutletContext();
-    const { type }  = useParams();
+    const { type } = useParams();
     const dispatch = useDispatch();
 
-    // const getEmailsService = useApi(API_URLS.getEmailFromType);
-    // const deleteEmailService = useApi(API_URLS.deleteEmails);
-    // const moveEmailsToBin = useApi(API_URLS.moveEmailsToBin);
-    const fetchData = async (token,type) => {
+    const fetchData = async (token, type) => {
         try {
-            const response = await getAllEmails(token,type);
+            const response = await getAllEmails(token, type);
             const emails = response.data.data;
             dispatch(fetchEmails(emails))
         } catch (error) {
@@ -40,25 +38,25 @@ export default function Emails() {
 
 
     useEffect(() => {
-        fetchData(token,type);
-        // dispatch(fetchEmails(token,type))
-        console.log(`type is ${type}`)
+        fetchData(token, type);
     }, [type, starredEmail])
 
     const selectedAllEmails = (e) => {
         if (e.target.checked) {
-            const emails = emails?.response?.map(email => email._id)
-            setSelectedEmails(emails);
+            const selectedemails = emails.map(email => email._id)
+            setSelectedEmails(selectedemails);
         } else {
             setSelectedEmails([]);
         }
     }
 
-    const deleteSelectedEmails = (e) => {
+    const deleteSelectedEmails = async (e) => {
         if (type === 'bin') {
-            // deleteEmailService.call(selectedEmails);
+            dispatch(deleteEmail(selectedEmails));
+
         } else {
-            // moveEmailsToBin.call(selectedEmails);
+            dispatch(movesEmailToBin(selectedEmails));
+            setSelectedEmails([]);
         }
         setStarredEmail(prevState => !prevState);
     }

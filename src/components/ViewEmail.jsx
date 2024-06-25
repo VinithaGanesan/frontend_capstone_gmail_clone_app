@@ -3,8 +3,8 @@ import { Box, Typography, styled } from "@mui/material";
 import React from "react";
 import { useOutletContext, useLocation } from "react-router-dom";
 import { emptyProfilePic } from "../constants/constant";
-// import useApi from "../hooks/useApi";
-// import { API_URLS } from "../services/api.urls";
+import { useDispatch } from "react-redux";
+import { movesEmailToBin } from "../Redux/Reducers/EmailReducer";
 
 const IconWrapper = styled(Box)({
     padding: 15
@@ -57,11 +57,11 @@ export default function ViewEmail() {
     const { openDrawer } = useOutletContext();
     const { state } = useLocation();
     const { email } = state;
+    const dispatch = useDispatch();
 
-    // const moveEmailsToBinService = useApi(API_URLS.moveEmailsToBin);
 
     const deleteEmail = () => {
-        // let deletemail = moveEmailsToBinService.call([email._id]);
+        dispatch(movesEmailToBin([email._id]))
         window.history.back();
         console.log('deletemail');
     }
@@ -74,7 +74,9 @@ export default function ViewEmail() {
             </IconWrapper>
             <Subject>{email.subject} <Indicator component="span">Inbox</Indicator></Subject>
             <Box style={{ display: 'flex' }}>
-                <Image src={emptyProfilePic} alt="dp" />
+                {
+                    email.image ? <Image src={email.image} alt="dp"/> :  <Image src={emptyProfilePic} alt="dp"/>
+                }
                 <Container>
                     <Box>
                         <Typography>

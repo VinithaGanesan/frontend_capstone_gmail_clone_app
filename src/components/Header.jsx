@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { gmaillogo } from "../constants/constant";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -38,7 +38,7 @@ const OptionsWrapper = styled(Box)({
 });
 
 export default function Header({ toggleDrawer }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const navigate = useNavigate();

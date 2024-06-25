@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 
-const url = 'https://backend-capstone-gmail-clone-app.onrender.com'
+// const url = 'https://backend-capstone-gmail-clone-app.onrender.com'
+const url = 'http://localhost:5000'
+
 
 const headers = (token) => ({
     headers: {
@@ -11,7 +13,6 @@ const headers = (token) => ({
 });
 
 
-
 // account routes
 export const register = (form) => axios.post(`${url}/auth/create`, form);
 export const login = (form) => axios.post(`${url}/auth/signin`, form);
@@ -19,8 +20,13 @@ export const login = (form) => axios.post(`${url}/auth/signin`, form);
 
 // email routes
 export const sendEmail = (form) => axios.post(`${url}/save`, form);
-export const getAllEmails = (token,type) => axios.get(`${url}/emails/${type}`, headers(token))
-
+export const savedraftEmail = (form) => axios.post(`${url}/savedraft`, form);
+export const getAllEmails = (token,type) => axios.get(`${url}/emails/${type}`, headers(token));
+export const toggleStarredEmails = ({id, value}) => axios.post(`${url}/starred`, {id, value});
+export const moveEmailsToBin = (selectedEmails) => axios.post(`${url}/bin`, selectedEmails);
+export const deleteEmails = (selectedEmails) => axios.delete(`${url}/delete`, {
+  data: selectedEmails
+});
 
 
 

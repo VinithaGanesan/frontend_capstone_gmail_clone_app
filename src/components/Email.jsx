@@ -1,11 +1,11 @@
 import { Star, StarBorder } from "@mui/icons-material";
 import { Box, Checkbox, ListItem, Typography, styled } from "@mui/material";
-import React from "react";
-// import useApi from "../hooks/useApi";
-// import { API_URLS } from "../services/api.urls";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../routes/routes";
 import { useDispatch } from 'react-redux'
+import { toggleStarredEmail } from "../Redux/Reducers/EmailReducer";
+import ComposeMail from "./ComposeMail";
 
 const Wrapper = styled(ListItem)({
     padding: '0 0 0 10px',
@@ -39,60 +39,88 @@ const Date = styled(Typography)({
 });
 
 export default function Email({ email, setStarredEmail, selectedEmails, setSelectedEmails }) {
-    // const toggleStarredEmailService = useApi(API_URLS.toggleStarredEmail);
+
+    const [openDrawer, setOpenDrawer] = useState(false);
+
 
     const navigate = useNavigate();
 
     const dispatcher = useDispatch();
 
-    const toggleStarredEmail = () => {
-        // toggleStarredEmailService.call({ id: email._id, value: !email.starred });
-        // setStarredEmail(prevState => !prevState);
+    const toggleStarredEmailService = () => {
+        dispatcher(toggleStarredEmail({ id: email._id, value: !email.starred }))
+        setStarredEmail(prevState => !prevState);
     }
 
-    const handleChange = () => {
-        if (selectedEmails.includes(email._id)) {
-            // setSelectedEmails(prevState => prevState.filter(id => id !== email._id));
-        } else {
-            // setSelectedEmails(prevState => [...prevState, email._id]);
-        }
+    const handleChange = (id) => {
+        setSelectedEmails(prevState =>
+            prevState.includes(id)
+                ? prevState.filter(mailId => mailId !== id)
+                : [...prevState, id]
+        );
     }
-    
-    const handleRead = () => {
-        console.log(email._id);
+
+    function onComposeClick() {
+        setOpenDrawer(true);
+        console.log('vinitha');
+    }
 
 
-    }
 
     return (
-        <Wrapper onClick={() => handleRead()}>
+        <Wrapper>
             <Checkbox
                 size="small"
                 checked={selectedEmails.includes(email._id)}
-                onChange={() => handleChange()}
+                onChange={() => handleChange(email._id)}
             />
             {
                 email.starred ?
-                    <Star fontSize="small" style={{ marginRight: 10 }} onClick={() => toggleStarredEmail()} />
+                    <Star fontSize="small" style={{ marginRight: 10 }} sx={{ color: 'yellow' }} onClick={() => toggleStarredEmailService()} />
                     :
-                    <StarBorder fontSize="small" style={{ marginRight: 10 }} onClick={() => toggleStarredEmail()} />
+                    <StarBorder fontSize="small" style={{ marginRight: 10 }} onClick={() => toggleStarredEmailService()} />
+            }
+            {
+                email.type !== 'drafts'
+                    ? <Box onClick={() => navigate(routes.view.path, { state: { email: email } })}>
+                        <Typography style={{ width: 200 }}>
+                            To:{email.to.split('@')[0]}
+                        </Typography>
+                        <Indicator>
+                            {email.type}
+                        </Indicator>
+                        <Typography>
+                            {email.subject} {email.body && '-'} {email.body}
+                        </Typography>
+                        <Date>
+                            {(new window.Date(email.date)).getDate()}&nbsp;
+                            {(new window.Date(email.date)).toLocaleString('default', { month: 'long' })}
+                        </Date>
+                    </Box>
+                    :
+                    <>
+                        <Box onClick={() => onComposeClick()}>
+                            <Typography style={{ width: 200 }}>
+                                To:{email.to.split('@')[0]}
+                            </Typography>
+                            <Indicator>
+                                {email.type}
+                            </Indicator>
+                            <Typography>
+                                {email.subject} {email.body && '-'} {email.body}
+                            </Typography>
+                            <Date>
+                                {(new window.Date(email.date)).getDate()}&nbsp;
+                                {(new window.Date(email.date)).toLocaleString('default', { month: 'long' })}
+                            </Date>
+                        </Box>
+
+                            <ComposeMail openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+
+                    </>
+
             }
 
-            <Box onClick={() => navigate(routes.view.path, { state: { email: email } })}>
-                <Typography style={{ width: 200 }}>
-                    To:{email.to.split('@')[0]}
-                </Typography>
-                <Indicator>
-                    {email.type}
-                </Indicator>
-                <Typography>
-                    {email.subject} {email.body && '-'} {email.body}
-                </Typography>
-                <Date>
-                    {(new window.Date(email.date)).getDate()}&nbsp;
-                    {(new window.Date(email.date)).toLocaleString('default', { month: 'long' })}
-                </Date>
-            </Box>
         </Wrapper>
     );
 }
