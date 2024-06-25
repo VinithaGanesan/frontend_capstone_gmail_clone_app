@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 
-// const url = 'https://backend-capstone-gmail-clone-app.onrender.com'
-const url = 'http://localhost:5000'
+const url = 'https://backend-capstone-gmail-clone-app.onrender.com'
 
 
 const headers = (token) => ({
