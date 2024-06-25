@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { moveEmailsToBin, sendEmail, toggleStarredEmails, deleteEmails, savedraftEmail } from "../../api";
+import { moveEmailsToBin, sendEmail, toggleStarredEmails, deleteEmails, savedraftEmail, searchAllEmails } from "../../api";
 
 const initialState = {
     emails: [],
     isLoading: false,
     error: null,
     type: null,
-    openDrawer: false,
+    query: '',
 }
 
 
@@ -48,8 +48,9 @@ const EmailReducer = createSlice({
         fetchEmails: (state, action) => {
             state.emails = action.payload;
           },
-        setOpenDrawer: (state, action) => {
-            state.openDrawer = true;
+        setQuery: (state, action) => {
+            console.log(action.payload);
+            state.query = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -132,7 +133,7 @@ const EmailReducer = createSlice({
     }
 });
 
-export const { fetchEmails, setOpenDrawer  } = EmailReducer.actions;
+export const { fetchEmails, setQuery } = EmailReducer.actions;
 
 export default EmailReducer.reducer;
 

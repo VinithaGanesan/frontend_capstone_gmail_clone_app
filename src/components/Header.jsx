@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { gmaillogo } from "../constants/constant";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { AppBar, Toolbar, styled, InputBase, Box, IconButton, Tooltip, Menu, MenuItem, Avatar, Divider, ListItemIcon } from '@mui/material';
-import { Menu as MenuIcon, Search, Tune, HelpOutlineOutlined, SettingsOutlined, AppsOutlined, PersonAdd, Settings, Logout } from '@mui/icons-material';
+import { AppBar, Toolbar, styled, InputBase, Box, IconButton, Tooltip, Menu, MenuItem, Avatar, ListItemIcon } from '@mui/material';
+import { Menu as MenuIcon, Search, Tune, HelpOutlineOutlined, SettingsOutlined, AppsOutlined, PersonAdd,  Logout } from '@mui/icons-material';
 import { logout } from "../Redux/Reducers/AuthReducer";
+import {  setQuery } from "../Redux/Reducers/EmailReducer";
 
 const StyledAppBar = styled(AppBar)({
   backgroundColor: "#f5F5F5",
@@ -39,10 +40,10 @@ const OptionsWrapper = styled(Box)({
 
 export default function Header({ toggleDrawer }) {
   const [anchorEl, setAnchorEl] = useState(null);
+
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -59,6 +60,8 @@ export default function Header({ toggleDrawer }) {
   }
 
 
+
+
   return (
     <StyledAppBar position="static">
       <Toolbar>
@@ -67,16 +70,18 @@ export default function Header({ toggleDrawer }) {
         </IconButton>
         <img src={gmaillogo} alt="logo" style={{ width: 100, marginLeft: 15 }} />
         <SearchWrapper>
-          <IconButton>
-            <Search color="action" />
-          </IconButton>
           <InputBase
             placeholder="Search in mail"
+            type="text"
+            onChange={(e) => dispatch(setQuery(e.target.value))}
           />
           <IconButton>
             <Tune color="action" />
           </IconButton>
         </SearchWrapper>
+          <IconButton >
+            <Search color="action"/>
+          </IconButton>
         <OptionsWrapper>
           <IconButton>
             <HelpOutlineOutlined color="action" />
@@ -134,24 +139,12 @@ export default function Header({ toggleDrawer }) {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem onClick={handleClose}>
-              <Avatar /> Profile
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Avatar /> My account
-            </MenuItem>
-            <Divider />
+
             <MenuItem onClick={handleClose}>
               <ListItemIcon>
                 <PersonAdd fontSize="small" />
               </ListItemIcon>
               Add another account
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <Settings fontSize="small" />
-              </ListItemIcon>
-              Settings
             </MenuItem>
             <MenuItem onClick={handleLogout}>
               <ListItemIcon>

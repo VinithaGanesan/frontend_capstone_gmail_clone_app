@@ -4,12 +4,10 @@ import { Box, Checkbox, List } from "@mui/material";
 import { DeleteOutline } from '@mui/icons-material';
 import Nomails from "./common/Nomails";
 import { EMPTY_TABS } from "../constants/constant";
-// import useApi from "../hooks/useApi";
-// import { API_URLS } from "../services/api.urls";
 import Email from "./Email";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteEmail, fetchEmails, movesEmailToBin } from "../Redux/Reducers/EmailReducer";
-import { getAllEmails } from "../api";
+import { getAllEmails, searchAllEmails } from "../api";
 
 
 export default function Emails() {
@@ -17,29 +15,38 @@ export default function Emails() {
     const [starredEmail, setStarredEmail] = useState(false);
     const [selectedEmails, setSelectedEmails] = useState([]);
     const { token } = useSelector((state) => state.users.data);
-    const [ emailSelected, setEmailSelected] = useState(null)
 
     const { emails } = useSelector((state) => state.emails);
 
+    const query = useSelector((state) => state.emails.query);
 
     const { openDrawer } = useOutletContext();
     const { type } = useParams();
     const dispatch = useDispatch();
 
-    const fetchData = async (token, type) => {
+    const fetchData = async (token, type, query) => {
         try {
-            const response = await getAllEmails(token, type);
-            const emails = response.data.data;
-            dispatch(fetchEmails(emails))
+            if (query.length === 0) {
+                const response = await getAllEmails(token, type);
+                const emails = response.data.data;
+                dispatch(fetchEmails(emails))
+            } else {
+                const queryresponse = await searchAllEmails(query);
+                const emailresponse = queryresponse.data.data;
+                const queryres = emailresponse.filter(email => (
+                    email.subject === query ||
+                    email.body === query
+                ))
+                dispatch(fetchEmails(queryres))
+            }
         } catch (error) {
             console.log(error);
         }
     }
 
-
     useEffect(() => {
-        fetchData(token, type);
-    }, [type, starredEmail])
+        fetchData(token, type, query);
+    }, [type, starredEmail, query])
 
     const selectedAllEmails = (e) => {
         if (e.target.checked) {
