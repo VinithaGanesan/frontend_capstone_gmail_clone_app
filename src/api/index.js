@@ -21,7 +21,7 @@ export const login = (form) => axios.post(`${url}/auth/signin`, form);
 export const sendEmail = (form) => axios.post(`${url}/save`, form);
 export const savedraftEmail = (form) => axios.post(`${url}/savedraft`, form);
 export const getAllEmails = (token,type) => axios.get(`${url}/emails/${type}`, headers(token));
-export const searchAllEmails = ( query) => axios.get(`${url}/search`, query );
+export const searchAllEmails = (token) => axios.get(`${url}/search`, headers(token));
 export const toggleStarredEmails = ({id, value}) => axios.post(`${url}/starred`, {id, value});
 export const moveEmailsToBin = (selectedEmails) => axios.post(`${url}/bin`, selectedEmails);
 export const deleteEmails = (selectedEmails) => axios.delete(`${url}/delete`, {

@@ -59,9 +59,6 @@ export default function Header({ toggleDrawer }) {
     setAnchorEl(null);
   }
 
-
-
-
   return (
     <StyledAppBar position="static">
       <Toolbar>
@@ -71,17 +68,17 @@ export default function Header({ toggleDrawer }) {
         <img src={gmaillogo} alt="logo" style={{ width: 100, marginLeft: 15 }} />
         <SearchWrapper>
           <InputBase
-            placeholder="Search in mail"
+            placeholder="Search mail"
             type="text"
             onChange={(e) => dispatch(setQuery(e.target.value))}
           />
+          <IconButton >
+            <Search color="action"/>
+          </IconButton>
           <IconButton>
             <Tune color="action" />
           </IconButton>
         </SearchWrapper>
-          <IconButton >
-            <Search color="action"/>
-          </IconButton>
         <OptionsWrapper>
           <IconButton>
             <HelpOutlineOutlined color="action" />

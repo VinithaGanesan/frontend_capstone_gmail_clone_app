@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
-import { Box, Checkbox, List } from "@mui/material";
+import { Box, Checkbox, Divider, List } from "@mui/material";
 import { DeleteOutline } from '@mui/icons-material';
 import Nomails from "./common/Nomails";
 import { EMPTY_TABS } from "../constants/constant";
@@ -31,7 +31,7 @@ export default function Emails() {
                 const emails = response.data.data;
                 dispatch(fetchEmails(emails))
             } else {
-                const queryresponse = await searchAllEmails(query);
+                const queryresponse = await searchAllEmails(token);
                 const emailresponse = queryresponse.data.data;
                 const queryres = emailresponse.filter(email => (
                     email.subject === query ||
@@ -70,7 +70,7 @@ export default function Emails() {
 
 
     return (
-        <Box style={openDrawer ? { marginLeft: 250, width: 'calc(100%-250px)' } : { width: '100%' }}>
+        <Box style={openDrawer ? { marginLeft: 250, width: 'calc(100%-250px)' } : { width: 'auto' }} >
             <Box style={{ padding: '20px 10px 0 10px', display: 'flex', alignItems: 'center' }}>
                 <Checkbox size="small"
                     onChange={(e) => selectedAllEmails(e)}
@@ -82,13 +82,17 @@ export default function Emails() {
             <List>
                 {
                     emails.map(email => (
-                        <Email
-                            email={email}
-                            key={email.id}
-                            setStarredEmail={setStarredEmail}
-                            selectedEmails={selectedEmails}
-                            setSelectedEmails={setSelectedEmails}
-                        />
+                        <>
+                            <Email
+                                email={email}
+                                key={email.id}
+                                setStarredEmail={setStarredEmail}
+                                selectedEmails={selectedEmails}
+                                setSelectedEmails={setSelectedEmails}
+                            />
+                            <Divider />
+                        </>
+
                     ))
                 }
             </List>

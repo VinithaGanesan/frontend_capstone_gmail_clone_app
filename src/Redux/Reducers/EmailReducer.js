@@ -49,7 +49,6 @@ const EmailReducer = createSlice({
             state.emails = action.payload;
           },
         setQuery: (state, action) => {
-            console.log(action.payload);
             state.query = action.payload;
         }
     },

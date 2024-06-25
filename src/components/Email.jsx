@@ -114,11 +114,8 @@ export default function Email({ email, setStarredEmail, selectedEmails, setSelec
                                 {(new window.Date(email.date)).toLocaleString('default', { month: 'long' })}
                             </Date>
                         </Box>
-
-                            <ComposeMail openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
-
+                        <ComposeMail openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
                     </>
-
             }
 
         </Wrapper>
