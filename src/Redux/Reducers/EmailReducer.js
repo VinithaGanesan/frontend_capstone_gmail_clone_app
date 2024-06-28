@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { moveEmailsToBin, sendEmail, toggleStarredEmails, deleteEmails, savedraftEmail, searchAllEmails } from "../../api";
+import { moveEmailsToBin, sendEmail, toggleStarredEmails, deleteEmails, savedraftEmail} from "../../api";
 
 const initialState = {
     emails: [],
@@ -60,7 +60,6 @@ const EmailReducer = createSlice({
             .addCase(addNewEmail.fulfilled, (state, action) => {
                 state.isLoading = false
                 // Add any fetched emails to the array
-                console.log(action);
                 state.emails = state.emails.concat(action.payload.data)
                 state.emails = state.emails.concat(action.payload.received)
 
@@ -74,7 +73,6 @@ const EmailReducer = createSlice({
             .addCase(saveDraftEmail.fulfilled, (state, action) => {
                 state.isLoading = false
                 // Add any fetched emails to the array
-                console.log(action);
                 state.emails = state.emails.concat(action.payload.data)
             })
             .addCase(saveDraftEmail.rejected, (state, action) => {
@@ -114,7 +112,6 @@ const EmailReducer = createSlice({
             })
             .addCase(deleteEmail.pending, (state, action) => {
                 state.isLoading = true
-                console.log(action);
             })
             .addCase(deleteEmail.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -136,5 +133,3 @@ export const { fetchEmails, setQuery } = EmailReducer.actions;
 
 export default EmailReducer.reducer;
 
-// export const selectEmailById = (state, emailId) =>
-//     state.emails.emails.find((email) => email.id === emailId)
